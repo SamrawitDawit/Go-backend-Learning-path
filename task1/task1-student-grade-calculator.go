@@ -66,6 +66,7 @@ func test() {
 		fmt.Println("Test case 1 failed.")
 		return
 	}
+
 	//Test case 2
 	studentData = student{
 		name:              "Redi",
