@@ -6,8 +6,8 @@ import (
 )
 
 type Library struct {
-	Books   map[int]models.Book
-	Members map[int]models.Member
+	Books   map[int]*models.Book
+	Members map[int]*models.Member
 }
 
 type LibraryManager interface {
@@ -20,7 +20,10 @@ type LibraryManager interface {
 }
 
 func (library *Library) AddBook(book models.Book) {
-	library.Books[book.ID] = book
+	if library.Books == nil {
+		library.Books = make(map[int]*models.Book)
+	}
+	library.Books[book.ID] = &book
 }
 func (library *Library) RemoveBook(bookID int) {
 	delete(library.Books, bookID)
@@ -31,7 +34,7 @@ func (library *Library) BorrowBook(bookID int, memberID int) error {
 		if book.Status == "Available" {
 			book.Status = "Borrowed"
 			member := library.Members[memberID]
-			member.BorrowedBooks = append(member.BorrowedBooks, book)
+			member.BorrowedBooks = append(member.BorrowedBooks, *book)
 			return nil
 		}
 	}
@@ -54,12 +57,13 @@ func (library *Library) ListAvailableBooks() []models.Book {
 	var availableBooks []models.Book
 	for _, book := range library.Books {
 		if book.Status == "Available" {
-			availableBooks = append(availableBooks, book)
+			availableBooks = append(availableBooks, *book)
 		}
 	}
 	return availableBooks
 }
 
 func (library *Library) ListBorrowedBooks(memberID int) []models.Book {
-	return library.Members[memberID].BorrowedBooks
+	member := library.Members[memberID]
+	return member.BorrowedBooks
 }

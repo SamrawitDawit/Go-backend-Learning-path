@@ -21,9 +21,11 @@ func (controller *LibraryController) BorrowBook(bookID int, memberID int) {
 func (controller *LibraryController) ReturnBook(bookID int, memberID int) {
 	controller.LibraryService.ReturnBook(bookID, memberID)
 }
-func (controller *LibraryController) ListAvailableBooks() {
-	controller.LibraryService.ListAvailableBooks()
+func (controller *LibraryController) ListAvailableBooks() []models.Book {
+	res := controller.LibraryService.ListAvailableBooks()
+	return res
 }
-func (controller *LibraryController) ListBorrowedBooks(memberID int) {
-	controller.LibraryService.ListBorrowedBooks(memberID)
+func (controller *LibraryController) ListBorrowedBooks(memberID int) []models.Book {
+	res := controller.LibraryService.ListBorrowedBooks(memberID)
+	return res
 }
