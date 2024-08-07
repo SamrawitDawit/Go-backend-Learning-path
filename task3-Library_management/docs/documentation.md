@@ -9,7 +9,6 @@
 5. [Project Structure](#project-structure)
 6. [API Endpoints](#api-endpoints)
 7. [Contributing](#contributing)
-8. [License](#license)
 
 ## Introduction
 The Library Management System is designed to help manage books and members in a library. It allows adding, removing, borrowing, and returning books, as well as listing available and borrowed books.
@@ -109,8 +108,6 @@ Library Management
 4. Push to the branch
 5. Create a new Pull request
 
-## License
-This project is licensed under the MIT License - see the [license](https://opensource.org/licenses) for details. 
 
 
 
