@@ -12,11 +12,11 @@ type Library struct {
 
 type LibraryManager interface {
 	AddBook(book models.Book)
-	RemoveBook(bookID int)
+	RemoveBook(bookID int) error
 	BorrowBook(bookID int, memberID int) error
 	ReturnBook(bookID int, memberID int) error
 	ListAvailableBooks() []models.Book
-	ListBorrowedBooks(memberID int) []models.Book
+	ListBorrowedBooks(memberID int) ([]models.Book, error)
 }
 
 func (library *Library) AddBook(book models.Book) {
@@ -25,15 +25,22 @@ func (library *Library) AddBook(book models.Book) {
 	}
 	library.Books[book.ID] = &book
 }
-func (library *Library) RemoveBook(bookID int) {
+func (library *Library) RemoveBook(bookID int) error {
+	if library.Books[bookID] == nil {
+		return errors.New("book not found")
+	}
 	delete(library.Books, bookID)
+	return nil
 }
 
 func (library *Library) BorrowBook(bookID int, memberID int) error {
+	member := library.Members[memberID]
+	if member == nil {
+		return errors.New("member not found")
+	}
 	if book, ok := library.Books[bookID]; ok {
 		if book.Status == "Available" {
 			book.Status = "Borrowed"
-			member := library.Members[memberID]
 			member.BorrowedBooks = append(member.BorrowedBooks, *book)
 			return nil
 		}
@@ -43,6 +50,9 @@ func (library *Library) BorrowBook(bookID int, memberID int) error {
 
 func (library *Library) ReturnBook(bookID int, memberID int) error {
 	member := library.Members[memberID]
+	if member == nil {
+		return errors.New("member not found")
+	}
 	for i, book := range member.BorrowedBooks {
 		if book.ID == bookID {
 			book.Status = "Available"
@@ -63,7 +73,10 @@ func (library *Library) ListAvailableBooks() []models.Book {
 	return availableBooks
 }
 
-func (library *Library) ListBorrowedBooks(memberID int) []models.Book {
+func (library *Library) ListBorrowedBooks(memberID int) ([]models.Book, error) {
 	member := library.Members[memberID]
-	return member.BorrowedBooks
+	if member == nil {
+		return []models.Book{}, errors.New("member not found")
+	}
+	return member.BorrowedBooks, nil
 }

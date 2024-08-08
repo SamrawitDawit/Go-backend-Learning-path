@@ -6,3 +6,5 @@ type Book struct {
 	Author string
 	Status string
 }
+
+var books = []Book{}
