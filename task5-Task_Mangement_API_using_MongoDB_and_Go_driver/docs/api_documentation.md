@@ -1,3 +1,58 @@
+# API Documentation
+
+## Overview
+This API provides endpoints to manage tasks, including retrieving, adding, updating and deleting tasks. The tasks are now stored in a MongoDB database, and this documentaion provides details on how to configure and connect to MongoDB.
+
+## MongoDB Configuration
+To connect the GO application to MongoDB, you need to congigure the MongoDB connection string. This can be done through environment variables or configuration file.
+
+### Environment Variables
+Set the following environment variables
+```export MONGODB_URI="mongodb://localhost:27017"
+   export MONGODB_DATABASE="taskdb"
+```
+
+
+### Configuration File
+Alternatively, you can use a configuration file to store the MonoDB connection settings.
+eg. `config.json`
+```{
+  "mongodb_uri": "mongodb://localhost:27017",
+  "mongodb_database": "taskmanager"
+}
+```
+## MongoDB Connection Setup
+The following steps describe how to establish a connection to MongoDB Go driver.
+
+### Step 1: Install the MongoDB Go Driver
+`go get go.mongodb.org/mongo-driver/mongo`
+
+### Step 2: Connect to MongoDB
+```go
+clientOptions := options.Client().ApplyURI(mongodb://localhost:27017)
+client, err := mongo.Connect(context.TODO(), clientOptions)
+if err != nil{
+  log.Fatal(err)
+}
+db := client.Database("taskdb")
+tasksCollection := db.Collection("tasks")
+userCollection := db.Collection("users")
+```
+
+### Step 3: Handle Database Operations 
+For CRUD operations, use the `taskCollection` to perform operations on the task collection.
+
+## Database Structure
+Tasks are stored in the `tasks` collection within the specified MongoDB database. Each task document has the following structure
+```json
+{
+  "_id": "<ObjectId>",
+  "title": "Task title",
+  "description": "Task description",
+  "due_date": "YYYY-MM-DD",
+  "status": "Not Started/Completed/etc."
+}
+```
 ## Get Tasks
 This endpoint retrieves a list of tasks.
 
