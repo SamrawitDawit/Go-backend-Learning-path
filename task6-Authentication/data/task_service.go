@@ -59,7 +59,7 @@ func (s *TaskService) AddTask(newTask models.Task) error {
 	return nil
 }
 
-func (s *TaskService) RemoveTask(taskID string) error {
+func (s *TaskService) RemoveTask(taskID primitive.ObjectID) error {
 	filter := bson.D{{Key: "_id", Value: taskID}}
 	_, err := s.TaskCollection.DeleteOne(context.TODO(), filter)
 

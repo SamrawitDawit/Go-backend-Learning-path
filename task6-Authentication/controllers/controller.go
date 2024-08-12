@@ -89,9 +89,13 @@ func (controller *Controller) AddTask(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"message": "Task Created"})
 }
 func (controller *Controller) RemoveTask(context *gin.Context) {
-	id := context.Param("_id")
-	err := controller.TaskService.RemoveTask(id)
-	if err == nil {
+	id, err1 := primitive.ObjectIDFromHex(context.Param("_id"))
+	if err1 != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+	err2 := controller.TaskService.RemoveTask(id)
+	if err2 == nil {
 		context.JSON(http.StatusOK, gin.H{"message": "Task removed"})
 		return
 	}
@@ -99,9 +103,13 @@ func (controller *Controller) RemoveTask(context *gin.Context) {
 }
 func (controller *Controller) UpdateTask(context *gin.Context) {
 	var updatedTask models.Task
-	id, err := primitive.ObjectIDFromHex(context.Param("_id"))
-	if err := context.BindJSON(&updatedTask); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	id, err1 := primitive.ObjectIDFromHex(context.Param("_id"))
+	if err1 != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+	if err2 := context.BindJSON(&updatedTask); err2 != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err2.Error()})
 		return
 	}
 	orginal_task, err := controller.TaskService.GetTask(id)
