@@ -10,6 +10,7 @@ import (
 const (
 	CollectionTask = "tasks"
 	CollectionUser = "users"
+	JWTSecret      = "it has to be secret"
 )
 
 type Task struct {

@@ -14,7 +14,6 @@ import (
 type userRepository struct {
 	database   mongo.Database
 	collection string
-	jwt        infrastructure.JWTService
 }
 
 func NewUserRepository(db mongo.Database, collection string) domain.UserRepository {
@@ -63,7 +62,7 @@ func (ur *userRepository) Login(c context.Context, user *domain.User) (string, e
 		return "", errors.New("the error is while comparing the password")
 	}
 
-	jwt_token, err3 := ur.jwt.GenerateToken(existing_user)
+	jwt_token, err3 := infrastructure.GenerateToken(existing_user)
 	if err3 != nil {
 		return "", err3
 	}

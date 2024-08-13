@@ -8,12 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-type JWTService struct {
-	jwt_secret []byte
-}
-
-func (j *JWTService) GenerateToken(user domain.User) (string, error) {
-	j.jwt_secret = []byte("It has to be a secret")
+func GenerateToken(user domain.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 	})
@@ -23,20 +18,20 @@ func (j *JWTService) GenerateToken(user domain.User) (string, error) {
 		"role":     user.Role,
 	}
 
-	jwt_token, err := token.SignedString(j.jwt_secret)
+	jwt_token, err := token.SignedString([]byte(domain.JWTSecret))
 	if err != nil {
 		return "", err
 	}
 	return jwt_token, nil
 }
 
-func (j *JWTService) CheckToken(authPart string) (*jwt.Token, error) {
+func CheckToken(authPart string) (*jwt.Token, error) {
 
 	token, err := jwt.Parse(authPart, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return j.jwt_secret, nil
+		return []byte(domain.JWTSecret), nil
 	})
 	if err != nil {
 		return nil, err
@@ -44,7 +39,7 @@ func (j *JWTService) CheckToken(authPart string) (*jwt.Token, error) {
 	return token, nil
 }
 
-func (j *JWTService) FindClaim(token *jwt.Token) (jwt.MapClaims, bool) {
+func FindClaim(token *jwt.Token) (jwt.MapClaims, bool) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	return claims, ok
 }
