@@ -5,6 +5,8 @@ import (
 	"log"
 	router "task7-Refactoring-task-manaager/Delivery/routers"
 
+	"time"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -17,5 +19,5 @@ func main() {
 		log.Fatal(err)
 	}
 	db := client.Database("taskdb")
-	router.NewTaskRouter(2, *db)
+	router.NewTaskRouter(10*time.Second, *db)
 }
