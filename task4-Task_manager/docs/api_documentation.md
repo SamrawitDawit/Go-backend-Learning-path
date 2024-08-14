@@ -1,85 +1,103 @@
-## Get Tasks
-This endpoint retrieves a list of tasks.
+# Postman Documentation
 
-### Request
-The request should be sent via an HTTP GET method to http://localhost:8080/tasks.
+`https://documenter.getpostman.com/view/33567770/2sA3s6FpkW`
 
-### Response
-Upon a successful execution, the endpoint returns a status code of 200 and a JSON response with an array of tasks. Each task object in the array contains the following properties:
-  - id (string): The ID of the task.
-  - title (string): The title of the task.
-  - description (string): The description of the task.
-  - due_date (string): The due date of the task.
-  - status (string): The status of the task.
 
-### Possible Errors
-  - 500 Internal Server Error: If there is an issue on the server side.
+# API Documentation
 
-## Get Task by ID
-This endpoint retrieves a task with a specific id.
+### Get Tasks
 
-### Request 
-The request should be sent via an HTTP GET method to http://localhost:8080/tasks/:id.
+  * Endpoint: `Get/tasks`
+  * Description: retrieves a list of tasks.
+  * Response:
+    - Status Code: `200 Ok`
+    - Body: a JSON response with an array of tasks.
+        ```json
+           {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "due_date": "time.Time",
+            "status": "string"
+            }
+            ```
+  * Possible Errors: 
+    - `500 Internal Server Error`: If there is an issue on the server side.
 
-### Response 
-Upon a successful execution, the endpoint returns a status code of 200 and a JSON response with a task of that ID.
-The task object contains the following properties:
-  - id (string): The ID of the task.
-  - title (string): The title of the task.
-  - description (string): The description of the task.
-  - due_date (string): The due date of the task.
-  - status (string): The status of the task.
+### Get Task By ID
 
-### Possible Errors
-  - 404 Not Found: If the task with the specified ID is not found.
-  - 500 Internal Server Error: If there is an issue on the server side.
+  * Endpoint: `Get/task/:id`
+  * Description: retrieves a task with a specific id.
+  * Response:
+    - Status Code: `200 Ok`
+    - Body: a JSON response a JSON response with a task of that ID.
+           ```json
+           {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "due_date": "time.Time",
+            "status": "string"
+            }
+            ```       
+  * Possible Errors: 
+    - `404 Not Found`: If the task with the specified ID is not found.
+    - `500 Internal Server Error`: If there is an issue on the server side.
 
-## Add Task
-This endpoint adds a new task.
+### Add Task 
 
-### Request
-The request should be sent via an HTTP POST method to http://localhost:8080/tasks.
-The request payload should have the following parameters in the raw request body type:
-  - id (string, optional): The ID of the task.
-  - title (string, optional): The title of the task.
-  - description (string, optional): The description of the task.
-  - status (string, optional): The status of the task.
+  * Endpoint: `POST/tasks`
+  * Description: adds a new task.
+  * Request Payload:
+  ```json
+  {
+    "id": "string",
+    "title": "string",
+    "description": "string",
+    "due_date": "time.Time",
+    "status": "string"
+  }
+  ```
+  * Response:
+    - Status Code: `201 Created`
+    - Body: JSON message `"Task created"`
+  * Possible Errors: 
+    - `400 Bad Request`: If the request payload is invalid.
+    - `500 Internal Server Error`: If there is an issue on the server side.
 
-### Response 
-Upon a successful execution, the endpoint returns a status code of 201 and a JSON response with a message "Task created".
+### Remove task
 
-### Possible Errors
-  - 400 Bad Request: If the request body is invalid.
-  - 500 Internal Server Error: If there is an issue on the server side.
+  * Endpoint: `DELETE/tasks/:id`
+  * Description: removes a task with a specific id.
+  * Request Parameters:
+  `id`: The ID of the task to be removed
+  * Response:
+    - Status Code: `200 OK`
+    - Body: JSON message `"Task removed"`
+  * Possible Errors: 
+    - `404 Not Found` If the task with the specified ID is not found.
+    - `500 Internal Server Error`: If there is an issue on the server side.
 
-## Remove Task 
-This endpoint removes a task with a specific id.
+### Update task
 
-### Request 
-The request should be sent via an HTTP DELETE method to http://localhost:8080/tasks/:id.
-
-### Response 
-Upon a successful execution, the endpoint returns a status code of 200 and a JSON response with a message "Task removed".
-
-### Possible Errors
-  - 404 Not Found: If the task with the specified ID is not found.
-  - 500 Internal Server Error: If there is an issue on the server side.
-
-## Update Task
-This endpoint updates a task of specific id.
-
-### Request 
-The request should be sent via an HTTP PUT method to http://localhost:8080/tasks/:id.
-The request payload should have one or more of the following parameters in the raw request body type:
-  - id (string, optional): The ID of the task.
-  - title (string, optional): The title of the task.
-  - description (string, optional): The description of the task.
-  - status (string, optional): The status of the task.
-
-### Response 
-Upon a successful execution, the endpoint returns a status code of 200 and a JSON response with a message "Task updated".
-
-### Possible Errors
-  - 400 Bad Request: If the request body is invalid.
-  - 404 Not Found: If the task with the specified ID is not found.
-  - 500 Internal Server Error: If there is an issue on the server side.
+  * Endpoint: `PUT/tasks/:id`
+  * Description: updates a task of specific id.
+  * Request Parameters:
+  `id`: The ID of the task to be updated
+  * Request Payload:
+  ```json
+  {
+    "id": "string", //optional
+    "title": "string", //optional
+    "description": "string", //optional
+    "due_date": "time.Time", //optional
+    "status": "string" //optional
+  }
+  ```
+  * Response:
+    - Status Code: `200 OK`
+    - Body: JSON message `"Task updated"`
+  * Possible Errors: 
+    - `404 Not Found` If the task with the specified ID is not found.
+    - `400 Bad Request`: If the request payload is invalid.
+    - `500 Internal Server Error`: If there is an issue on the server side.
