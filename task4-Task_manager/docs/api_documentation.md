@@ -1,6 +1,6 @@
 # Postman Documentation
 
-`https://documenter.getpostman.com/view/33567770/2sA3s6FpkW`
+https://documenter.getpostman.com/view/33567770/2sA3s6FpkW
 
 
 # API Documentation
