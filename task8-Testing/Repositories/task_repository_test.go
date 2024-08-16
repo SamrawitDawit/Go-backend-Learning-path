@@ -69,11 +69,15 @@ func (suite *taskRepositorySuite) SetupSuite() {
 }
 
 func (suite *taskRepositorySuite) TearDownTest() {
-	err := suite.client.Disconnect(context.Background())
-	if err != nil {
-		suite.T().Fatalf("couldn't disconnect from mongo: %v", err)
+	if suite.client != nil && suite.client.Ping(context.Background(), readpref.Primary()) == nil {
+		err := suite.client.Disconnect(context.Background())
+		if err != nil {
+			suite.T().Logf("couldn't disconnect from mongo: %v", err)
+		}
+	} else {
+		suite.T().Log("MongoDB client is already disconnected")
 	}
-	err = suite.mongoC.Terminate(context.Background())
+	err := suite.mongoC.Terminate(context.Background())
 	if err != nil {
 		suite.T().Fatalf("couldn't terminate mongo container: %v", err)
 	}
