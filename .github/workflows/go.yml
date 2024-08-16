@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        go-version: [1.17.x, 1.18.x]
+        go-version: 1.22.5.x
 
     steps:
     - name: Check out code
@@ -23,6 +23,9 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: ${{ matrix.go-version }}
+
+    - name: Set working directory
+      run: cd task8-Testing
 
     - name: Install dependencies
       run: go mod tidy
