@@ -68,7 +68,7 @@ func (suite *taskRepositorySuite) SetupSuite() {
 	suite.client = client
 }
 
-func (suite *taskRepositorySuite) TearDownTest() {
+func (suite *taskRepositorySuite) TearDownSuite() {
 	if suite.client != nil && suite.client.Ping(context.Background(), readpref.Primary()) == nil {
 		err := suite.client.Disconnect(context.Background())
 		if err != nil {
