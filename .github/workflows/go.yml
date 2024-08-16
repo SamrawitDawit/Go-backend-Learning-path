@@ -8,8 +8,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:stable
+
     defaults:
       run:
         working-directory: ./task8-Testing
