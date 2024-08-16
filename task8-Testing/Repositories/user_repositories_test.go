@@ -5,6 +5,7 @@ import (
 	"fmt"
 	domain "task8-Testing/Domain"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 	"github.com/testcontainers/testcontainers-go"
@@ -29,7 +30,7 @@ func (suite *userRepositorySuite) setupMongoContainer() (testcontainers.Containe
 		ContainerRequest: testcontainers.ContainerRequest{
 			Image:        "mongo:latest",
 			ExposedPorts: []string{"27017/tcp"},
-			WaitingFor:   wait.ForListeningPort("27017/tcp"),
+			WaitingFor:   wait.ForListeningPort("27017/tcp").WithStartupTimeout(30 * time.Second),
 		},
 		Started: true,
 	})
@@ -67,12 +68,16 @@ func (suite *userRepositorySuite) SetupSuite() {
 	suite.client = client
 }
 
-func (suite *userRepositorySuite) TearDownTest() {
-	err := suite.client.Disconnect(context.Background())
-	if err != nil {
-		suite.T().Fatalf("couldn't disconnect from mongo: %v", err)
+func (suite *userRepositorySuite) TearDownSuite() {
+	if suite.client != nil && suite.client.Ping(context.Background(), readpref.Primary()) == nil {
+		err := suite.client.Disconnect(context.Background())
+		if err != nil {
+			suite.T().Logf("couldn't disconnect from mongo: %v", err)
+		}
+	} else {
+		suite.T().Log("MongoDB client is already disconnected")
 	}
-	err = suite.mongoC.Terminate(context.Background())
+	err := suite.mongoC.Terminate(context.Background())
 	if err != nil {
 		suite.T().Fatalf("couldn't terminate mongo container: %v", err)
 	}
