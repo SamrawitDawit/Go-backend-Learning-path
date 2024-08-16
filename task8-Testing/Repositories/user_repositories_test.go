@@ -59,7 +59,7 @@ func (suite *userRepositorySuite) setupMongoContainer() (testcontainers.Containe
 	}
 	return mongoC, client
 }
-func (suite *userRepositorySuite) SetupSuite() {
+func (suite *userRepositorySuite) SetupTest() {
 	mongoC, client := suite.setupMongoContainer()
 	db := client.Database("test_db")
 	repo := NewUserRepository(*db, "tasks")
@@ -68,7 +68,7 @@ func (suite *userRepositorySuite) SetupSuite() {
 	suite.client = client
 }
 
-func (suite *userRepositorySuite) TearDownSuite() {
+func (suite *userRepositorySuite) TearDownTest() {
 	if suite.client != nil && suite.client.Ping(context.Background(), readpref.Primary()) == nil {
 		err := suite.client.Disconnect(context.Background())
 		if err != nil {
